@@ -16,7 +16,7 @@ public class Student {
     @OneToOne(cascade = CascadeType.ALL)
     private Address address;
 
-    @OneToMany(mappedBy = "student")
+    @OneToMany(mappedBy = "student",cascade = CascadeType.ALL)
     private List<Telephone> telephone;
 
     public Integer getSid() {

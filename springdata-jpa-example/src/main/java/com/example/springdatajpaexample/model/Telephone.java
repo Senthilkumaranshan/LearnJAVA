@@ -2,6 +2,8 @@ package com.example.springdatajpaexample.model;
 
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 
 @Entity
@@ -14,6 +16,7 @@ public class Telephone {
 
     @ManyToOne
         @JoinColumn
+            @JsonIgnore
     private Student student;
 
     public Integer getTid() {
