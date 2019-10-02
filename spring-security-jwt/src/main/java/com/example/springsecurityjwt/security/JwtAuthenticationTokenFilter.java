@@ -14,7 +14,7 @@ import java.io.IOException;
 public class JwtAuthenticationTokenFilter extends AbstractAuthenticationProcessingFilter {
 
 
-    protected JwtAuthenticationTokenFilter() {
+    public JwtAuthenticationTokenFilter() {
         super("/**"); //filter applies for every url
     }
 
@@ -23,5 +23,8 @@ public class JwtAuthenticationTokenFilter extends AbstractAuthenticationProcessi
         //this is where we decode the token
 
         return null;
+    }
+
+    public void setAuthenticationSuccessHandler(JwtSuccessHandler jwtSuccessHandler) {
     }
 }
