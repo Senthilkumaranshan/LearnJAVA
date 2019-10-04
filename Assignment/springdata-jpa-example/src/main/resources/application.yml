@@ -19,5 +19,5 @@ security:
     resource:
       token-info-uri: http://localhost:8282/oauth/check_token
     client:
-      client-id: web
-      client-secret: webpass
+      client-id: mobile
+      client-secret: pin

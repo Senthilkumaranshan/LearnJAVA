@@ -1,15 +1,23 @@
 security:
   oauth2:
     client:
-      client-id: web
-      client-secret: webpass
-      user-authorization-uri: http://localhost:8383/oauth/authorize
-      access-token-uri: http://localhost:8383/oauth/token
+      client-id: mobile
+      client-secret: pin
+      user-authorization-uri: http://localhost:8282/oauth/authorize
+      access-token-uri: http://localhost:8282/oauth/token
     resource:
-      token-info-uri: http://localhost:8383/oauth/check_token
+      token-info-uri: http://localhost:8282/oauth/check_token
 
 server:
   servlet:
     session:
       cookie:
         name: KSESSIONID
+
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/jpadb?createDatabaseIfNotExist=true
+    username: root
+    password: 1qaz2wsx@
+    driver-class-name: com.mysql.cj.jdbc.Driver
+

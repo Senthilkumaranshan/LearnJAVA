@@ -1,19 +1,37 @@
 package com.example.smsui.controller;
 
+import com.example.springdatajpaexample.model.Student;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.oauth2.client.EnableOAuth2Sso;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.client.HttpStatusCodeException;
+import org.springframework.web.client.RestTemplate;
 
 @Controller
 @EnableOAuth2Sso
 public class UiController extends WebSecurityConfigurerAdapter {
+
+    @Autowired
+    RestTemplate restTemplate;
+
+    @Bean
+    RestTemplate restTemplate(){
+        return new RestTemplate();
+    }
 
     String name = "";
     @Override
@@ -46,19 +64,29 @@ public class UiController extends WebSecurityConfigurerAdapter {
         return "home";
     }
 
-    @RequestMapping(value = "/create")
-    public String create(ModelMap model){
+    @RequestMapping(value = "/profile")
+    public String loadProfile(Model model){
 
+        //Need to call profile service here
 
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if (principal instanceof UserDetails) {
-             name = ((UserDetails)principal).getUsername();
-        } else {
-             name = principal.toString();
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.add("Authorization",AccessTokenConfig.getToken());
+
+        HttpEntity<Student> studentHttpEntity = new HttpEntity<>(httpHeaders);
+        try{
+            ResponseEntity<Student[]> responseEntity = restTemplate.exchange("http://localhost:8980/sms/allstudent",
+                    HttpMethod.GET,studentHttpEntity,Student[].class);
+
+            model.addAttribute("students",responseEntity.getBody());
+        }
+        catch (HttpStatusCodeException se){
+
+            ResponseEntity responseEntity = ResponseEntity.status(se.getStatusCode())
+                    .headers(se.getResponseHeaders())
+                    .body(se.getResponseBodyAsString());
+            model.addAttribute("error",responseEntity);
         }
 
-        model.addAttribute("name", name);
-
-        return "create";
+        return "secure";
     }
 }
