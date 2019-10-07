@@ -19,4 +19,16 @@ public class JwtUser {
     public void setRole(String role) {
         this.role = role;
     }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public String getRole() {
+        return role;
+    }
 }

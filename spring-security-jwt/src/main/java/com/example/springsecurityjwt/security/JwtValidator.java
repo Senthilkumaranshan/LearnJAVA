@@ -11,15 +11,22 @@ public class JwtValidator {
 
     public JwtUser validate(String token) {
 
-        Claims body = Jwts.parser()
-                .setSigningKey(secret)
-                .parseClaimsJws(token)
-                .getBody();
+        JwtUser jwtUser = null;
+        try {
+            Claims body = Jwts.parser()
+                    .setSigningKey(secret)
+                    .parseClaimsJws(token)
+                    .getBody();
 
-        JwtUser jwtUser = new JwtUser();
-        jwtUser.setUserName(body.getSubject());
-        jwtUser.setId(Long.parseLong((String)body.getId()));
-        jwtUser.setRole((String) body.get("role"));
+            jwtUser = new JwtUser();
+            jwtUser.setUserName(body.getSubject());
+            jwtUser.setId(Long.parseLong((String) body.getId()));
+            jwtUser.setRole((String) body.get("role"));
+
+        }
+        catch (Exception e){
+            System.out.println(e);
+        }
 
         return jwtUser;
     }

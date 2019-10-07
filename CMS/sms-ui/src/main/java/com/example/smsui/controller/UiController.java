@@ -1,6 +1,7 @@
 package com.example.smsui.controller;
 
 //import com.example.springdatajpaexample.model.Student;
+import com.example.emsdatajpa.model.Employee;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.oauth2.client.EnableOAuth2Sso;
 import org.springframework.context.annotation.Bean;
@@ -64,31 +65,31 @@ public class UiController extends WebSecurityConfigurerAdapter {
         return "home";
     }
 
-//    @RequestMapping(value = "/profile")
-//    public String loadProfile(Model model){
-//
-//        //Need to call profile service here
-//
-//        HttpHeaders httpHeaders = new HttpHeaders();
-//        httpHeaders.add("Authorization",AccessTokenConfig.getToken());
-//
-//        HttpEntity<Student> studentHttpEntity = new HttpEntity<>(httpHeaders);
-//        try{
-//            ResponseEntity<Student[]> responseEntity = restTemplate.exchange("http://localhost:8980/sms/allstudent",
-//                    HttpMethod.GET,studentHttpEntity,Student[].class);
-//
-//            model.addAttribute("students",responseEntity.getBody());
-//        }
-//        catch (HttpStatusCodeException se){
-//
-//            ResponseEntity responseEntity = ResponseEntity.status(se.getStatusCode())
-//                    .headers(se.getResponseHeaders())
-//                    .body(se.getResponseBodyAsString());
-//            model.addAttribute("error",responseEntity);
-//        }
-//
-//        return "secure";
-//    }
+    @RequestMapping(value = "/employees")
+    public String loadEmployees(Model model){
+
+        //Need to call profile service here
+
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.add("Authorization",AccessTokenConfig.getToken());
+
+        HttpEntity<Employee> studentHttpEntity = new HttpEntity<>(httpHeaders);
+        try{
+            ResponseEntity<Employee[]> responseEntity = restTemplate.exchange("http://localhost:8980/ems/employees",
+                    HttpMethod.GET,studentHttpEntity,Employee[].class);
+
+            model.addAttribute("employees",responseEntity.getBody());
+        }
+        catch (HttpStatusCodeException se){
+
+            ResponseEntity responseEntity = ResponseEntity.status(se.getStatusCode())
+                    .headers(se.getResponseHeaders())
+                    .body(se.getResponseBodyAsString());
+            model.addAttribute("error",responseEntity);
+        }
+
+        return "employee";
+    }
 
     @RequestMapping(value = "/menu")
     public String loadReport(){
