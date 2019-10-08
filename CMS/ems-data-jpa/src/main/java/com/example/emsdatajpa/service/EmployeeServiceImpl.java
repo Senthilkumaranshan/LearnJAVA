@@ -29,7 +29,7 @@ public class EmployeeServiceImpl {
         return employeeRepository.findAll();
     }
 
-    public Optional<Employee> getEmployeeById(int id) {
+    public Optional<Employee> getEmployeeById(Integer id) {
 
         return employeeRepository.findById(id);
     }

@@ -2,6 +2,7 @@ package com.example.smsui.controller;
 
 //import com.example.springdatajpaexample.model.Student;
 import com.example.emsdatajpa.model.Employee;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.oauth2.client.EnableOAuth2Sso;
 import org.springframework.context.annotation.Bean;
@@ -17,6 +18,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.HttpStatusCodeException;
@@ -65,6 +68,7 @@ public class UiController extends WebSecurityConfigurerAdapter {
         return "home";
     }
 
+    //display all employees
     @RequestMapping(value = "/employees")
     public String loadEmployees(Model model){
 
@@ -73,10 +77,10 @@ public class UiController extends WebSecurityConfigurerAdapter {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add("Authorization",AccessTokenConfig.getToken());
 
-        HttpEntity<Employee> studentHttpEntity = new HttpEntity<>(httpHeaders);
+        HttpEntity<Employee> employeeHttpEntity = new HttpEntity<>(httpHeaders);
         try{
             ResponseEntity<Employee[]> responseEntity = restTemplate.exchange("http://localhost:8980/ems/employees",
-                    HttpMethod.GET,studentHttpEntity,Employee[].class);
+                    HttpMethod.GET,employeeHttpEntity,Employee[].class);
 
             model.addAttribute("employees",responseEntity.getBody());
         }
@@ -91,6 +95,31 @@ public class UiController extends WebSecurityConfigurerAdapter {
         return "employee";
     }
 
+
+    //display specific employee details
+    @RequestMapping(value = "/employee/{id}")
+    public String loadEmployee(@PathVariable int id, Model model){
+
+        //Need to call profile service here
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.add("Authorization",AccessTokenConfig.getToken());
+
+        HttpEntity<Employee> employeeHttpEntity = new HttpEntity<>(httpHeaders);
+        try{
+            ResponseEntity<Employee> responseEntity = restTemplate.exchange("http://localhost:8980/ems/employee/"+id,
+                    HttpMethod.GET,employeeHttpEntity,Employee.class);
+            model.addAttribute("employee",responseEntity.getBody());
+        }
+        catch (HttpStatusCodeException se){
+            System.out.println("test");
+            ResponseEntity responseEntity = ResponseEntity.status(se.getStatusCode())
+                    .headers(se.getResponseHeaders())
+                    .body(se.getResponseBodyAsString());
+            model.addAttribute("error",responseEntity);
+        }
+
+        return "emp_details";
+    }
     @RequestMapping(value = "/menu")
     public String loadReport(){
 

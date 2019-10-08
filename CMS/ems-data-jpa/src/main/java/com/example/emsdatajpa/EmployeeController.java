@@ -28,12 +28,10 @@ public class EmployeeController {
         return employeeService.getEmployees();
     }
 
-    @RequestMapping(value = "/find/{id}",method = RequestMethod.GET)
+    @RequestMapping(value = "/employee/{id}",method = RequestMethod.GET)
     public Optional<Employee> getEmployeeById(@PathVariable int id){
-
         return employeeService.getEmployeeById(id);
     }
-
 
 
 }
