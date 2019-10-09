@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymleaf.org">
+<head>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+
+    <title>Employee Info</title>
+</head>
+<body>
+
+<div class="container">
+
+    <div class="jumbotron">
+        <h1>Tasks</h1>
+    </div>
+
+    <div th:unless="${error==null}">
+        <table class="table" >
+            <thead>
+            <td>Status Code</td>
+            <td>Error</td>
+            </thead>
+            <tbody>
+            <tr>
+                <td><span th:text="${error.statusCode}"></span></td>
+                <td><span th:text="${error.body}"></span></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <br>
+    <div th:if="${error==null}">
+        <table class="table" >
+            <thead>
+            <td>ID</td>
+            <td>Name</td>
+            <td>Action</td>
+
+            </thead>
+            <tbody>
+            <tr th:each="task: ${tasks}">
+                <td><span th:text="${task.tid}"></span></td>
+                <td><span th:text="${task.tname}"></span></td>
+                <td><a href="#" th:href="@{/task/{id}(id=${task.tid})}" class="btn btn-info" role="button">view</a></td>
+
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+</body>
+</html>

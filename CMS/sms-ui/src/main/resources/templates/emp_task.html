@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymleaf.org">
+<head>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <title>Task Info</title>
+</head>
+<body>
+
+<div class="container">
+
+    <div class="jumbotron">
+        <h1>Tasks Detail</h1>
+    </div>
+
+    <div th:if="${error==null}">
+        <table class="table" >
+            <thead>
+            <td>ID</td>
+            <td>Name</td>
+
+            </thead>
+            <tbody>
+            <span th:each="project: ${employee.projects}">
+            <tr th:each="task: ${project.tasks}">
+                <td><span th:text="${task.tid}"></span></td>
+                <td><span th:text="${task.tname}"></span></td>
+            </tr>
+            </span>
+            </tbody>
+        </table>
+    </div>
+
+
+</div>
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+</body>
+</html>

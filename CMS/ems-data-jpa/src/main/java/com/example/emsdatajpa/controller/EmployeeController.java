@@ -1,4 +1,4 @@
-package com.example.emsdatajpa;
+package com.example.emsdatajpa.controller;
 
 import com.example.emsdatajpa.model.Employee;
 import com.example.emsdatajpa.service.EmployeeServiceImpl;
