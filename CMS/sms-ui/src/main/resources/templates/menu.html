@@ -1,24 +1,60 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Menu</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
-    <link rel="stylesheet" href="style.css" type="text/css">
+    <link rel="stylesheet"th:href="@{/css/style.css}" type="text/css">
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
 </head>
 <body>
-<div class="container some" >
+<div th:class="container" th:id="banner1">
     <div class="jumbotron" style="">
         <div class="row" align="center">
             <a class="btn btn-primary" type="button" href="http://localhost:8080/employees">Employees</a>
             <a class="btn btn-primary" type="button" href="http://localhost:8080/projects">Projects</a>
             <a class="btn btn-primary" type="button" href="http://localhost:8080/tasks">Tasks</a>
             <a class="btn btn-primary" type="button" href="http://localhost:8080/operations">Operations</a>
-
         </div>
     </div>
-</div></body>
+</div>
+
+<div th:class="container" th:id="banner1">
+    <div align="center">
+        <h1 th:id="title" > Employee Management Menu</h1>
+    </div>
+    <div th:id="navbarfoot">
+        <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link active" id="pills-home-tab" data-toggle="pill" href="#pills-home" role="tab" aria-controls="pills-home" aria-selected="true">Home</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="pills-employee-tab" data-toggle="pill" href="#pills-employee" role="tab" aria-controls="pills-profile" aria-selected="false">Employee</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="pills-project-tab" data-toggle="pill" href="#pills-project" role="tab" aria-controls="pills-contact" aria-selected="false">Project</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="pills-Task-tab" data-toggle="pill" href="#pills-Task" role="tab" aria-controls="pills-contact" aria-selected="false">Task</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="pills-operation-tab" data-toggle="pill" href="#pills-operation" role="tab" aria-controls="pills-contact" aria-selected="false">Operation</a>
+            </li>
+        </ul>
+        <div class="tab-content" id="pills-tabContent">
+            <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">1</div>
+            <div class="tab-pane fade" id="pills-employee" role="tabpanel" aria-labelledby="pills-employee-tab">2</div>
+            <div class="tab-pane fade" id="pills-project" role="tabpanel" aria-labelledby="pills-project-tab">3</div>
+            <div class="tab-pane fade" id="pills-Task" role="tabpanel" aria-labelledby="pills-task-tab">4</div>
+            <div class="tab-pane fade" id="pills-operation" role="tabpanel" aria-labelledby="pills-operation-tab">5</div>
+        </div>
+    </div>
+</div>
+
+<div th:id="subbody">
+
+</div>
+</body>
 </html>

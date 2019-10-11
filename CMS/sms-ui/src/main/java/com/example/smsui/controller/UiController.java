@@ -43,7 +43,7 @@ public class UiController extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                .antMatchers("/")
+                .antMatchers("/","/images/**","/css/**")
                 .permitAll()
                 .anyRequest()
                 .authenticated();
