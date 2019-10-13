@@ -14,9 +14,9 @@ public class Task {
 
     String tname;
 
-    @ManyToMany(mappedBy = "tasks")
-    @JsonIgnore
-    List<Project> projects;
+//    @ManyToMany(mappedBy = "tasks")
+//    @JsonIgnore
+//    List<Project> projects;
 
     public Integer getTid() {
         return tid;
@@ -34,11 +34,11 @@ public class Task {
         this.tname = tname;
     }
 
-    public List<Project> getProjects() {
-        return projects;
-    }
-
-    public void setProjects(List<Project> projects) {
-        this.projects = projects;
-    }
+//    public List<Project> getProjects() {
+//        return projects;
+//    }
+//
+//    public void setProjects(List<Project> projects) {
+//        this.projects = projects;
+//    }
 }

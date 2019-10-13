@@ -5,21 +5,18 @@
     <title>Menu</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
     <link rel="stylesheet"th:href="@{/css/style.css}" type="text/css">
-
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
 </head>
 <body>
-<div th:class="container" th:id="banner1">
-    <div class="jumbotron" style="">
-        <div class="row" align="center">
-            <a class="btn btn-primary" type="button" href="http://localhost:8080/employees">Employees</a>
-            <a class="btn btn-primary" type="button" href="http://localhost:8080/projects">Projects</a>
-            <a class="btn btn-primary" type="button" href="http://localhost:8080/tasks">Tasks</a>
-            <a class="btn btn-primary" type="button" href="http://localhost:8080/operations">Operations</a>
-        </div>
-    </div>
-</div>
+<!--<div th:class="container" th:id="banner1">-->
+<!--        <div class="jumbotron" style="">-->
+<!--            <div class="row" align="center">-->
+<!--                <a class="btn btn-primary" type="button" href="http://localhost:8080/employees">Employees</a>-->
+<!--                <a class="btn btn-primary" type="button" href="http://localhost:8080/projects">Projects</a>-->
+<!--                <a class="btn btn-primary" type="button" href="http://localhost:8080/tasks">Tasks</a>-->
+<!--                <a class="btn btn-primary" type="button" href="http://localhost:8080/operations">Operations</a>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--</div>-->
 
 <div th:class="container" th:id="banner1">
     <div align="center">
@@ -31,7 +28,7 @@
                 <a class="nav-link active" id="pills-home-tab" data-toggle="pill" href="#pills-home" role="tab" aria-controls="pills-home" aria-selected="true">Home</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" id="pills-employee-tab" data-toggle="pill" href="#pills-employee" role="tab" aria-controls="pills-profile" aria-selected="false">Employee</a>
+                <a class="nav-link" th:id="pills-employee-tab" data-toggle="pill" href="#pills-employee" role="tab" aria-controls="pills-profile" aria-selected="false">Employee</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" id="pills-project-tab" data-toggle="pill" href="#pills-project" role="tab" aria-controls="pills-contact" aria-selected="false">Project</a>
@@ -45,10 +42,237 @@
         </ul>
         <div class="tab-content" id="pills-tabContent">
             <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">1</div>
-            <div class="tab-pane fade" id="pills-employee" role="tabpanel" aria-labelledby="pills-employee-tab">2</div>
-            <div class="tab-pane fade" id="pills-project" role="tabpanel" aria-labelledby="pills-project-tab">3</div>
-            <div class="tab-pane fade" id="pills-Task" role="tabpanel" aria-labelledby="pills-task-tab">4</div>
-            <div class="tab-pane fade" id="pills-operation" role="tabpanel" aria-labelledby="pills-operation-tab">5</div>
+            <div class="tab-pane fade" id="pills-employee" role="tabpanel" aria-labelledby="pills-employee-tab">
+
+                <div class="container fbbodycolor">
+                <div class="jumbotron">
+                    <h4 align="center">Employee Details</h4>
+                </div>
+
+                <div th:unless="${error==null}">
+                    <table class="table" >
+                        <thead>
+                        <td>Status Code</td>
+                        <td>Error</td>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td><span th:text="${error.statusCode}"></span></td>
+                            <td><span th:text="${error.body}"></span></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <br>
+                <div th:if="${error==null}">
+                    <table class="table testcolor" align="center" >
+                        <thead>
+                        <td>ID</td>
+                        <td>Name</td>
+                        <td>Action</td>
+
+                        </thead>
+                        <tbody>
+                        <tr th:each="employee: ${employees}">
+                            <td><span th:text="${employee.eid}"></span></td>
+                            <td><span th:text="${employee.ename}"></span></td>
+                            <td><a href="#" th:href="@{/employee/{id}(id=${employee.eid})}" class="btn btn-info" role="button">view</a></td>
+
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                </div>
+
+            </div>
+            <div class="tab-pane fade" id="pills-project" role="tabpanel" aria-labelledby="pills-project-tab">
+
+                <div class="container fbbodycolor">
+
+                    <div class="jumbotron">
+                        <h4 align="center">Project Details</h4>
+                    </div>
+
+                    <div th:unless="${error==null}">
+                        <table class="table" >
+                            <thead>
+                            <td>Status Code</td>
+                            <td>Error</td>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td><span th:text="${error.statusCode}"></span></td>
+                                <td><span th:text="${error.body}"></span></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <br>
+                    <div th:if="${error==null}">
+                        <table class="table" align="center">
+                            <thead>
+                            <td>ID</td>
+                            <td>Name</td>
+                            <td>Action</td>
+
+                            </thead>
+                            <tbody>
+                            <tr th:each="project: ${projects}">
+                                <td><span th:text="${project.pid}"></span></td>
+                                <td><span th:text="${project.pname}"></span></td>
+                                <td><a href="#" th:href="@{/project/{id}(id=${project.pid})}" class="btn btn-info" role="button">view</a></td>
+
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+
+                </div>
+
+            </div>
+            <div class="tab-pane fade" id="pills-Task" role="tabpanel" aria-labelledby="pills-task-tab">
+
+                <div class="container fbbodycolor">
+
+                    <div class="jumbotron">
+                        <h4 align="center">Task Details</h4>
+                    </div>
+
+                    <div th:unless="${error==null}">
+                        <table class="table" >
+                            <thead>
+                            <td>Status Code</td>
+                            <td>Error</td>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td><span th:text="${error.statusCode}"></span></td>
+                                <td><span th:text="${error.body}"></span></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <br>
+                    <div th:if="${error==null}">
+                        <table class="table" align="center">
+                            <thead>
+                            <td>ID</td>
+                            <td>Name</td>
+                            <td>Action</td>
+
+                            </thead>
+                            <tbody>
+                            <tr th:each="task: ${tasks}">
+                                <td><span th:text="${task.tid}"></span></td>
+                                <td><span th:text="${task.tname}"></span></td>
+                                <td><a href="#" th:href="@{/task/{id}(id=${task.tid})}" class="btn btn-info" role="button">view</a></td>
+
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+
+                </div>
+
+            </div>
+            <div class="tab-pane fade" id="pills-operation" role="tabpanel" aria-labelledby="pills-operation-tab">
+
+                <div class="container fbbodycolor">
+
+                    <div class="jumbotron ">
+                        <h4 align="center">Assign Operations</h4>
+                    </div>
+
+                    <div th:unless="${error==null}">
+                        <table class="table" >
+                            <thead>
+                            <td>Status Code</td>
+                            <td>Error</td>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td><span th:text="${error.statusCode}"></span></td>
+                                <td><span th:text="${error.body}"></span></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <br>
+
+                    <div th:if="${error==null}">
+                        <form class="form-inline" action="#" th:action="@{/operationForm}" method="post">
+                        <table class="table" align="center" >
+                            <thead>
+                            <td>Operations Form</td>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <label class="my-1 mr-2" for="inlineFormCustomSelectPref">Select Employees</label>
+                                        <select class="custom-select my-1 mr-sm-2" id="inlineFormCustomSelectPref">
+                                            <option th:each="employee: ${employees}" th:value="${employee.eid}" th:text="${employee.ename}"  selected>Choose...</option>
+                                        </select>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td>
+                                        <label class="my-1 mr-2" for="inlineFormCustomSelectPref2">Select Projects</label>
+                                        <select class="custom-select my-1 mr-sm-2" id="inlineFormCustomSelectPref2" >
+                                            <option th:each="project: ${projects}" th:value="${project.pid}" th:text="${project.pname}"  selected>Choose...</option>
+                                        </select>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td>
+
+                                        <div class="panel-group">
+                                            <div class="panel panel-default">
+                                                <div class="panel-heading">
+                                                    <h4 class="panel-title">
+                                                        <a data-toggle="collapse" href="#collapse1">Select Tasks</a>
+                                                    </h4>
+                                                </div>
+                                                <div id="collapse1" class="panel-collapse collapse">
+                                                    <div class="panel-body" th:if="${error==null}">
+                                                        <table class="table" >
+                                                            <tbody>
+                                                            <tr th:each="task: ${tasks}">
+                                                                <div class="form-check">
+                                                                    <input class="form-check-input" type="checkbox" value="" id="defaultCheck1" >
+                                                                    <label class="form-check-label" for="defaultCheck1" th:text="${task.tname}" th:value="${task.tid}" >
+
+                                                                    </label>
+                                                                </div>
+                                                            </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>  <button type="submit" class="btn btn-primary">Submit</button>
+                                    </td>
+                                </tr>
+
+                            </tbody>
+                        </table>
+                        </form>
+                    </div>
+
+
+                </div>
+
+
+            </div>
         </div>
     </div>
 </div>
@@ -56,5 +280,9 @@
 <div th:id="subbody">
 
 </div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+<script type="text/javascript" th:src="@{/js/custom.js}" ></script>
 </body>
 </html>

@@ -17,9 +17,9 @@ public class EmployeeServiceImpl {
 
     public Employee save(Employee employee) {
 
-        for(Project project:employee.getProjects()){
-            project.setEmployees((List<Employee>) employee);
-        }
+//        for(Project project:employee.getProjects()){
+//            project.setEmployees((List<Employee>) employee);
+//        }
 
         return employeeRepository.save(employee);
     }

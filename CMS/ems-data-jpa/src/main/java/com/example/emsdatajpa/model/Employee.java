@@ -11,13 +11,13 @@ public class Employee {
     Integer eid;
 
     String ename;
-
-    @ManyToMany
-    @JoinTable(
-            name = "emp_project",
-            joinColumns = @JoinColumn(name = "eid"),
-            inverseJoinColumns = @JoinColumn(name = "pid"))
-    private List<Project> projects;
+//
+//    @ManyToMany
+//    @JoinTable(
+//            name = "emp_project",
+//            joinColumns = @JoinColumn(name = "eid"),
+//            inverseJoinColumns = @JoinColumn(name = "pid"))
+//    private List<Project> projects;
 
     public Integer getEid() {
         return eid;
@@ -34,12 +34,12 @@ public class Employee {
     public void setEname(String ename) {
         this.ename = ename;
     }
-
-    public List<Project> getProjects() {
-        return projects;
-    }
-
-    public void setProjects(List<Project> projects) {
-        this.projects = projects;
-    }
+//
+//    public List<Project> getProjects() {
+//        return projects;
+//    }
+//
+//    public void setProjects(List<Project> projects) {
+//        this.projects = projects;
+//    }
 }

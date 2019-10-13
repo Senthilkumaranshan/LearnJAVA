@@ -43,7 +43,7 @@ public class UiController extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                .antMatchers("/","/images/**","/css/**")
+                .antMatchers("/","/images/**","/css/**","/js/**")
                 .permitAll()
                 .anyRequest()
                 .authenticated();
@@ -235,8 +235,34 @@ public class UiController extends WebSecurityConfigurerAdapter {
     }
 
     @RequestMapping(value = "/menu")
-    public String loadReport(){
+    public String loadReport(Model model){
 
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.add("Authorization",AccessTokenConfig.getToken());
+
+        HttpEntity<Employee> employeeHttpEntity = new HttpEntity<>(httpHeaders);
+        HttpEntity<Project> employeeHttpEntityP = new HttpEntity<>(httpHeaders);
+        HttpEntity<Task> employeeHttpEntityT = new HttpEntity<>(httpHeaders);
+        try{
+            ResponseEntity<Employee[]> responseEntity = restTemplate.exchange("http://localhost:8980/ems/employees",
+                    HttpMethod.GET,employeeHttpEntity,Employee[].class);
+            ResponseEntity<Project[]> responseEntityP = restTemplate.exchange("http://localhost:8980/proj/projects",
+                    HttpMethod.GET,employeeHttpEntity,Project[].class);
+
+            ResponseEntity<Task[]> responseEntityT = restTemplate.exchange("http://localhost:8980/task/tasks/",
+                    HttpMethod.GET,employeeHttpEntity,Task[].class);
+
+            model.addAttribute("employees",responseEntity.getBody());
+            model.addAttribute("projects",responseEntityP.getBody());
+            model.addAttribute("tasks",responseEntityT.getBody());
+        }
+        catch (HttpStatusCodeException se){
+
+            ResponseEntity responseEntity = ResponseEntity.status(se.getStatusCode())
+                    .headers(se.getResponseHeaders())
+                    .body(se.getResponseBodyAsString());
+            model.addAttribute("error",responseEntity);
+        }
         return "menu";
 
     }

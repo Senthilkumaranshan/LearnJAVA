@@ -1,3 +1,4 @@
+
 #banner1{
 /* background-image: url('/images/banner2.jpg');*/
  background-color:#3b5998;
@@ -42,3 +43,20 @@ margin-top:3.7%;
 color:#fff;
 }
 
+.center{
+text-align:center;
+align:center;
+}
+
+.fbbodycolor{
+background-color:#F2F3F5;
+align:center;
+
+}
+
+.testcolor{
+background-color:red;
+}
+.nav>li>a:focus, .nav>li>a:hover{
+background-color:#337ab7;
+}
