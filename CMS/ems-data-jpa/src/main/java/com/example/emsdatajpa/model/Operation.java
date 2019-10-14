@@ -47,4 +47,14 @@ public class Operation {
     public void setTid(Integer tid) {
         this.tid = tid;
     }
+
+    @Override
+    public String toString() {
+        return "Operation{" +
+                "oid=" + oid +
+                ", pid=" + pid +
+                ", eid=" + eid +
+                ", tid=" + tid +
+                '}';
+    }
 }

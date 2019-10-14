@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ProjectServiceImpl {
@@ -16,5 +17,10 @@ public class ProjectServiceImpl {
     public List<Project> getProjects() {
 
         return projectRepository.findAll();
+    }
+
+    public Optional<Project> getProjectById(Integer id) {
+
+        return projectRepository.findById(id);
     }
 }
