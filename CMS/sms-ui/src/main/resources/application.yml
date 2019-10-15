@@ -4,9 +4,9 @@ security:
       client-id: mobile
       client-secret: pin
       user-authorization-uri: http://localhost:8282/oauth/authorize
-      access-token-uri: http://localhost:8282/oauth/token
+      access-token-uri: http://dockerauth:8282/oauth/token
     resource:
-      token-info-uri: http://localhost:8282/oauth/check_token
+      token-info-uri: http://dockerauth:8282/oauth/check_token
 
 server:
   servlet:
@@ -16,7 +16,7 @@ server:
 
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3306/jpadb?createDatabaseIfNotExist=true
+    url: jdbc:mysql://datamysql:3306/jpadb?createDatabaseIfNotExist=true
     username: root
     password: 1qaz2wsx@
-    driver-class-name: com.mysql.cj.jdbc.Driver
+    driver-class-name: com.mysql.jdbc.Driver

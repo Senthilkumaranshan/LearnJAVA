@@ -26,12 +26,12 @@
     <div th:id="navbarfoot">
         <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
             <li class="nav-item">
-                <a class="nav-link active" id="pills-home-tab" data-toggle="pill" href="#pills-home" role="tab" aria-controls="pills-home" aria-selected="true">Home</a>
+                <a class="nav-link " id="pills-home-tab" data-toggle="pill" href="#pills-home" role="tab" aria-controls="pills-home" aria-selected="true">Home</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" th:id="pills-employee-tab" data-toggle="pill" href="#pills-employee" role="tab" aria-controls="pills-profile" aria-selected="false">Employee</a>
             </li>
-            <li class="nav-item">
+            <li class="nav-item active">
                 <a class="nav-link" id="pills-project-tab" data-toggle="pill" href="#pills-project" role="tab" aria-controls="pills-contact" aria-selected="false">Project</a>
             </li>
             <li class="nav-item">
@@ -41,8 +41,12 @@
                 <a class="nav-link" id="pills-operation-tab" data-toggle="pill" href="#pills-operation" role="tab" aria-controls="pills-contact" aria-selected="false">Operation</a>
             </li>
         </ul>
+        <div class="right-corner">
+            <a class="dropdown-item" href="#" th:text="${username}"></a>
+            <a class="dropdown-item" href="/logout">SignOut</a>
+        </div>
         <div class="tab-content" id="pills-tabContent">
-            <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
+            <div class="tab-pane fade " id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
                 <div class="home">
 
                 </div>
@@ -50,52 +54,53 @@
             <div class="tab-pane fade" id="pills-employee" role="tabpanel" aria-labelledby="pills-employee-tab">
 
                 <div class="container fbbodycolor">
-                <div class="jumbotron">
-                    <a data-toggle="modal" data-target="#createemp" class="btn btn-primary right" >Create Employee</a>
-                    <h4 align="center">Employee Details</h4>
-                </div>
+                    <div class="jumbotron">
+                        <a data-toggle="modal" data-target="#createemp" class="btn btn-primary right" style="color:#fff">Create Employee</a>
+                        <h4 align="center">Employee Details</h4>
+                    </div>
 
-                <div th:unless="${error==null}">
-                    <table class="table" >
-                        <thead>
-                        <td>Status Code</td>
-                        <td>Error</td>
-                        </thead>
-                        <tbody>
-                        <tr>
-                            <td><span th:text="${error.statusCode}"></span></td>
-                            <td><span th:text="${error.body}"></span></td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <br>
-                <div th:if="${error==null}">
-                    <table class="table testcolor" align="center" >
-                        <thead class="thead-dark">
-                        <td>ID</td>
-                        <td>Name</td>
-                        <td>Action</td>
+                    <div th:unless="${error==null}">
+                        <table class="table" >
+                            <thead>
+                            <td>Status Code</td>
+                            <td>Error</td>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td><span th:text="${error.statusCode}"></span></td>
+                                <td><span th:text="${error.body}"></span></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <br>
+                    <div th:if="${error==null}">
+                        <table class="table testcolor" align="center" >
+                            <thead class="thead-dark">
+                            <td>ID</td>
+                            <td>Name</td>
+                            <td>Action</td>
 
-                        </thead>
-                        <tbody>
-                        <tr th:each="employee: ${employees}">
-                            <td><span th:text="${employee.eid}"></span></td>
-                            <td><span th:text="${employee.ename}"></span></td>
-                            <td><a href="#" th:href="@{/employee/{id}(id=${employee.eid})}" class="btn btn-info" role="button">view</a></td>
+                            </thead>
+                            <tbody>
+                            <tr th:each="employee: ${employees}">
+                                <td><span th:text="${employee.eid}"></span></td>
+                                <td><span th:text="${employee.ename}"></span></td>
+                                <td><a href="#" th:href="@{/employee/{id}(id=${employee.eid})}" class="btn btn-info" role="button">view</a></td>
 
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
 
             </div>
-            <div class="tab-pane fade" id="pills-project" role="tabpanel" aria-labelledby="pills-project-tab">
+            <div class="tab-pane fade show active" id="pills-project" role="tabpanel" aria-labelledby="pills-project-tab">
 
                 <div class="container fbbodycolor">
 
                     <div class="jumbotron">
+                        <a data-toggle="modal" data-target="#createproject" class="btn btn-primary right" style="color:#fff">Create Project</a>
                         <h4 align="center">Project Details</h4>
                     </div>
 
@@ -142,6 +147,7 @@
                 <div class="container fbbodycolor">
 
                     <div class="jumbotron">
+                        <a data-toggle="modal" data-target="#createtask" class="btn btn-primary right" style="color:#fff">Create Task</a>
                         <h4 align="center">Task Details</h4>
                     </div>
 
@@ -209,8 +215,8 @@
 
                     <div th:if="${error==null}" class="op-top">
                         <form th:action="@{/operation}" method="post">
-                        <table class="table" >
-                            <tbody>
+                            <table class="table" >
+                                <tbody>
                                 <tr>
                                     <td>
                                         <label class="left-align">Select Employees</label>
@@ -266,8 +272,8 @@
                                     </td>
                                 </tr>
 
-                            </tbody>
-                        </table>
+                                </tbody>
+                            </table>
                         </form>
                     </div>
 
@@ -296,6 +302,62 @@
                     <div class="form-group">
                         <label for="name">Employee Name</label>
                         <input name="ename"  type="text" class="form-control" id="name" aria-describedby="name" placeholder="Enter name">
+                    </div>
+
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- create project Modal -->
+<div class="modal fade" id="createproject" tabindex="-1" role="dialog" aria-labelledby="createprojectLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="createprojectLabel">Create Project</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+                <form th:action="@{/project}" method="post">
+                    <div class="form-group">
+                        <label for="pname">Project Name</label>
+                        <input name="pname"  type="text" class="form-control" id="pname" aria-describedby="pname" placeholder="Enter project">
+                    </div>
+
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- create task Modal -->
+<div class="modal fade" id="createtask" tabindex="-1" role="dialog" aria-labelledby="createtaskLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="createtaskLabel">Create Task</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+                <form th:action="@{/task}" method="post">
+                    <div class="form-group">
+                        <label for="tname">Task Name</label>
+                        <input name="tname"  type="text" class="form-control" id="tname" aria-describedby="tname" placeholder="Enter task">
                     </div>
 
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>

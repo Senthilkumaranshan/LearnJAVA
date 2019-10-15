@@ -5,48 +5,48 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
-    <title>Employee Info</title>
+    <title>Hello, world!</title>
 </head>
 <body>
 
 <div class="container">
 
     <div class="jumbotron">
-        <h1>Employee Management System</h1>
+        <h1>Student Management System</h1>
     </div>
+    <form name="students.form" th:action="@{/profile}" th:formmethod="post">
+
+    <button type="submit" class="btn btn-primary">Profiles</button>
+    </form>
 
     <div th:unless="${error==null}">
-        <table class="table" >
-            <thead>
-            <td>Status Code</td>
-            <td>Error</td>
-            </thead>
-            <tbody>
-            <tr>
-                <td><span th:text="${error.statusCode}"></span></td>
-                <td><span th:text="${error.body}"></span></td>
-            </tr>
-            </tbody>
-        </table>
+    <table class="table" >
+        <thead>
+        <td>Status Code</td>
+        <td>Error</td>
+        </thead>
+        <tbody>
+        <tr>
+            <td><span th:text="${error.statusCode}"></span></td>
+            <td><span th:text="${error.body}"></span></td>
+        </tr>
+        </tbody>
+    </table>
     </div>
-    <br>
+<br>
     <div th:if="${error==null}">
-        <table class="table" >
-            <thead>
-            <td>ID</td>
-            <td>Name</td>
-            <td>Action</td>
-
-            </thead>
-            <tbody>
-            <tr th:each="employee: ${employees}">
-                <td><span th:text="${employee.eid}"></span></td>
-                <td><span th:text="${employee.ename}"></span></td>
-                <td><a href="#" th:href="@{/employee/{id}(id=${employee.eid})}" class="btn btn-info" role="button">view</a></td>
-
-            </tr>
-            </tbody>
-        </table>
+    <table class="table" >
+        <thead>
+        <td>ID</td>
+        <td>First Name</td>
+        </thead>
+        <tbody>
+        <tr th:each="student: ${students}">
+            <td><span th:text="${student.sid}"></span></td>
+            <td><span th:text="${student.name}"></span></td>
+        </tr>
+        </tbody>
+    </table>
     </div>
 
 

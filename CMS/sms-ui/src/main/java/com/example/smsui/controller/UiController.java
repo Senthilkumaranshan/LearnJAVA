@@ -1,7 +1,7 @@
 package com.example.smsui.controller;
 
-//import com.example.springdatajpaexample.model.Student;
-import com.example.emsdatajpa.model.*;
+
+import com.example.smsui.model.*;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.oauth2.client.EnableOAuth2Sso;
@@ -15,6 +15,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -44,7 +45,8 @@ public class UiController extends WebSecurityConfigurerAdapter {
                 .antMatchers("/","/images/**","/css/**","/js/**")
                 .permitAll()
                 .anyRequest()
-                .authenticated();
+                .authenticated()
+                .and().logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout")).logoutSuccessUrl("/").deleteCookies("KSESSION","JSESSIONID").invalidateHttpSession(true).clearAuthentication(true);
     }
 
     @RequestMapping(value = "/")
@@ -53,20 +55,6 @@ public class UiController extends WebSecurityConfigurerAdapter {
         return "index";
     }
 
-    @RequestMapping(value = "/report")
-    public String loadReport(ModelMap model){
-
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if (principal instanceof UserDetails) {
-            name = ((UserDetails)principal).getUsername();
-        } else {
-            name = principal.toString();
-        }
-
-        model.addAttribute("name", name);
-
-        return "home";
-    }
 
     //display all employees
     @RequestMapping(value = "/employees")
@@ -79,7 +67,7 @@ public class UiController extends WebSecurityConfigurerAdapter {
 
         HttpEntity<Employee> employeeHttpEntity = new HttpEntity<>(httpHeaders);
         try{
-            ResponseEntity<Employee[]> responseEntity = restTemplate.exchange("http://localhost:8980/ems/employees",
+            ResponseEntity<Employee[]> responseEntity = restTemplate.exchange("http://dockerems:8980/ems/employees",
                     HttpMethod.GET,employeeHttpEntity,Employee[].class);
 
             model.addAttribute("employees",responseEntity.getBody());
@@ -92,7 +80,7 @@ public class UiController extends WebSecurityConfigurerAdapter {
             model.addAttribute("error",responseEntity);
         }
 
-        return "employee";
+        return "allemployee";
     }
 
 
@@ -111,16 +99,16 @@ public class UiController extends WebSecurityConfigurerAdapter {
         HttpEntity<Employee> employeeHttpEntityEs = new HttpEntity<>(httpHeaders);
         HttpEntity<Operation> employeeHttpEntityO = new HttpEntity<>(httpHeaders);
         try{
-            ResponseEntity<Employee[]> responseEntity = restTemplate.exchange("http://localhost:8980/ems/employees",
+            ResponseEntity<Employee[]> responseEntity = restTemplate.exchange("http://dockerems:8980/ems/employees",
                     HttpMethod.GET,employeeHttpEntity,Employee[].class);
-            ResponseEntity<Project[]> responseEntityP = restTemplate.exchange("http://localhost:8980/proj/projects",
+            ResponseEntity<Project[]> responseEntityP = restTemplate.exchange("http://dockerems:8980/proj/projects",
                     HttpMethod.GET,employeeHttpEntityP,Project[].class);
 
-            ResponseEntity<Task[]> responseEntityT = restTemplate.exchange("http://localhost:8980/task/tasks/",
+            ResponseEntity<Task[]> responseEntityT = restTemplate.exchange("http://dockerems:8980/task/tasks/",
                     HttpMethod.GET,employeeHttpEntityT,Task[].class);
-            ResponseEntity<Employee> responseEntityEs = restTemplate.exchange("http://localhost:8980/ems/employee/"+id,
+            ResponseEntity<Employee> responseEntityEs = restTemplate.exchange("http://dockerems:8980/ems/employee/"+id,
                     HttpMethod.GET,employeeHttpEntityEs,Employee.class);
-            ResponseEntity<Operation[]> responseEntityO = restTemplate.exchange("http://localhost:8980/op/operations/"+id,
+            ResponseEntity<Operation[]> responseEntityO = restTemplate.exchange("http://dockerems:8980/op/operations/"+id,
                     HttpMethod.GET,employeeHttpEntityO,Operation[].class);
 
 
@@ -141,6 +129,8 @@ public class UiController extends WebSecurityConfigurerAdapter {
             model.addAttribute("operations",responseEntityO.getBody());
             model.addAttribute("filteredpid",filteredpid);
             model.addAttribute("filteredtid",filteredtid);
+            model.addAttribute("username",AccessTokenConfig.getPrincipalName());
+            model.addAttribute("privilage",AccessTokenConfig.getAuthorities());
         }
         catch (HttpStatusCodeException se){
 
@@ -162,12 +152,29 @@ public class UiController extends WebSecurityConfigurerAdapter {
         httpHeaders.add("Authorization",AccessTokenConfig.getToken());
 
         HttpEntity<Project> employeeHttpEntityPs = new HttpEntity<>(httpHeaders);
+        HttpEntity<Employee> employeeHttpEntity = new HttpEntity<>(httpHeaders);
+        HttpEntity<Project> employeeHttpEntityP = new HttpEntity<>(httpHeaders);
+        HttpEntity<Task> employeeHttpEntityT = new HttpEntity<>(httpHeaders);
 
         try{
-            ResponseEntity<Project> responseEntityPs = restTemplate.exchange("http://localhost:8980/proj/projects/"+id,
+            ResponseEntity<Project> responseEntityPs = restTemplate.exchange("http://dockerems:8980/proj/projects/"+id,
                     HttpMethod.GET,employeeHttpEntityPs,Project.class);
+            ResponseEntity<Employee[]> responseEntity = restTemplate.exchange("http://dockerems:8980/ems/employees",
+                    HttpMethod.GET,employeeHttpEntity,Employee[].class);
+            ResponseEntity<Project[]> responseEntityP = restTemplate.exchange("http://dockerems:8980/proj/projects",
+                    HttpMethod.GET,employeeHttpEntityP,Project[].class);
+
+            ResponseEntity<Task[]> responseEntityT = restTemplate.exchange("http://dockerems:8980/task/tasks/",
+                    HttpMethod.GET,employeeHttpEntityT,Task[].class);
+
+            model.addAttribute("employees",responseEntity.getBody());
+            model.addAttribute("projects",responseEntityP.getBody());
+            model.addAttribute("tasks",responseEntityT.getBody());
+            model.addAttribute("opob", new OperationObject());
 
             model.addAttribute("project",responseEntityPs.getBody());
+            model.addAttribute("username",AccessTokenConfig.getPrincipalName());
+            model.addAttribute("privilage",AccessTokenConfig.getAuthorities());
 
         }
         catch (HttpStatusCodeException se){
@@ -189,13 +196,30 @@ public class UiController extends WebSecurityConfigurerAdapter {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add("Authorization",AccessTokenConfig.getToken());
 
+        HttpEntity<Task> employeeHttpEntityTs = new HttpEntity<>(httpHeaders);
+        HttpEntity<Employee> employeeHttpEntity = new HttpEntity<>(httpHeaders);
+        HttpEntity<Project> employeeHttpEntityP = new HttpEntity<>(httpHeaders);
         HttpEntity<Task> employeeHttpEntityT = new HttpEntity<>(httpHeaders);
 
         try{
-            ResponseEntity<Task> responseEntityT = restTemplate.exchange("http://localhost:8980/task/task/"+id,
-                    HttpMethod.GET,employeeHttpEntityT,Task.class);
+            ResponseEntity<Task> responseEntityTs = restTemplate.exchange("http://dockerems:8980/task/task/"+id,
+                    HttpMethod.GET,employeeHttpEntityTs,Task.class);
+            ResponseEntity<Employee[]> responseEntity = restTemplate.exchange("http://dockerems:8980/ems/employees",
+                    HttpMethod.GET,employeeHttpEntity,Employee[].class);
+            ResponseEntity<Project[]> responseEntityP = restTemplate.exchange("http://dockerems:8980/proj/projects",
+                    HttpMethod.GET,employeeHttpEntityP,Project[].class);
 
-            model.addAttribute("task",responseEntityT.getBody());
+            ResponseEntity<Task[]> responseEntityT = restTemplate.exchange("http://dockerems:8980/task/tasks/",
+                    HttpMethod.GET,employeeHttpEntityT,Task[].class);
+
+            model.addAttribute("employees",responseEntity.getBody());
+            model.addAttribute("projects",responseEntityP.getBody());
+            model.addAttribute("tasks",responseEntityT.getBody());
+            model.addAttribute("opob", new OperationObject());
+
+            model.addAttribute("task",responseEntityTs.getBody());
+            model.addAttribute("username",AccessTokenConfig.getPrincipalName());
+            model.addAttribute("privilage",AccessTokenConfig.getAuthorities());
 
         }
         catch (HttpStatusCodeException se){
@@ -219,7 +243,7 @@ public class UiController extends WebSecurityConfigurerAdapter {
 
         HttpEntity<Employee> employeeHttpEntity = new HttpEntity<>(httpHeaders);
         try{
-            ResponseEntity<Employee> responseEntity = restTemplate.exchange("http://localhost:8980/ems/employee/"+id,
+            ResponseEntity<Employee> responseEntity = restTemplate.exchange("http://dockerems:8980/ems/employee/"+id,
                     HttpMethod.GET,employeeHttpEntity,Employee.class);
             model.addAttribute("employee",responseEntity.getBody());
         }
@@ -244,7 +268,7 @@ public class UiController extends WebSecurityConfigurerAdapter {
 
         HttpEntity<Project> employeeHttpEntity = new HttpEntity<>(httpHeaders);
         try{
-            ResponseEntity<Project[]> responseEntity = restTemplate.exchange("http://localhost:8980/proj/projects/",
+            ResponseEntity<Project[]> responseEntity = restTemplate.exchange("http://dockerems:8980/proj/projects/",
                     HttpMethod.GET,employeeHttpEntity,Project[].class);
             model.addAttribute("projects",responseEntity.getBody());
         }
@@ -269,7 +293,7 @@ public class UiController extends WebSecurityConfigurerAdapter {
 
         HttpEntity<Task> employeeHttpEntity = new HttpEntity<>(httpHeaders);
         try{
-            ResponseEntity<Task[]> responseEntity = restTemplate.exchange("http://localhost:8980/task/tasks/",
+            ResponseEntity<Task[]> responseEntity = restTemplate.exchange("http://dockerems:8980/task/tasks/",
                     HttpMethod.GET,employeeHttpEntity,Task[].class);
             model.addAttribute("tasks",responseEntity.getBody());
         }
@@ -294,13 +318,13 @@ public class UiController extends WebSecurityConfigurerAdapter {
         HttpEntity<Task> employeeHttpEntityT = new HttpEntity<>(httpHeaders);
 
         try{
-            ResponseEntity<Employee[]> responseEntity = restTemplate.exchange("http://localhost:8980/ems/employees",
+            ResponseEntity<Employee[]> responseEntity = restTemplate.exchange("http://dockerems:8980/ems/employees",
                     HttpMethod.GET,employeeHttpEntity,Employee[].class);
 
-            ResponseEntity<Project[]> responseEntityP = restTemplate.exchange("http://localhost:8980/proj/projects",
+            ResponseEntity<Project[]> responseEntityP = restTemplate.exchange("http://dockerems:8980/proj/projects",
                     HttpMethod.GET,employeeHttpEntityP,Project[].class);
 
-            ResponseEntity<Task[]> responseEntityT = restTemplate.exchange("http://localhost:8980/task/tasks/",
+            ResponseEntity<Task[]> responseEntityT = restTemplate.exchange("http://dockerems:8980/task/tasks/",
                     HttpMethod.GET,employeeHttpEntityT,Task[].class);
 
             model.addAttribute("employees",responseEntity.getBody());
@@ -334,7 +358,7 @@ public class UiController extends WebSecurityConfigurerAdapter {
             operation.setTid(operationobj.getTid()[i]);
 
             HttpEntity<Operation> employeeHttpEntityO = new HttpEntity<>(operation,httpHeaders);
-            restTemplate.postForEntity("http://localhost:8980/op/operations/save",
+            restTemplate.postForEntity("http://dockerems:8980/op/operations/save",
                     employeeHttpEntityO,String.class);
         }
 
@@ -352,11 +376,45 @@ public class UiController extends WebSecurityConfigurerAdapter {
 
 
             HttpEntity<Employee> employeeHttpEntityE = new HttpEntity<>(employee,httpHeaders);
-            restTemplate.postForEntity("http://localhost:8980/ems/employee",
+            restTemplate.postForEntity("http://dockerems:8980/ems/employee",
                     employeeHttpEntityE,String.class);
 
 
-        return "redirect:menu";
+        return "redirect:/menu";
+
+    }
+
+    @RequestMapping(value = "/project")
+    public String saveProject(@ModelAttribute Project project){
+
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.add("Authorization",AccessTokenConfig.getToken());
+
+
+
+        HttpEntity<Project> employeeHttpEntityP = new HttpEntity<>(project,httpHeaders);
+        restTemplate.postForEntity("http://dockerems:8980/proj/project",
+                employeeHttpEntityP,String.class);
+
+
+        return "redirect:/menu";
+
+    }
+
+    @RequestMapping(value = "/task")
+    public String saveTask(@ModelAttribute Task task){
+
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.add("Authorization",AccessTokenConfig.getToken());
+
+
+
+        HttpEntity<Task> employeeHttpEntityT = new HttpEntity<>(task,httpHeaders);
+        restTemplate.postForEntity("http://dockerems:8980/task/task",
+                employeeHttpEntityT,String.class);
+
+
+        return "redirect:/menu";
 
     }
 
@@ -370,18 +428,20 @@ public class UiController extends WebSecurityConfigurerAdapter {
         HttpEntity<Project> employeeHttpEntityP = new HttpEntity<>(httpHeaders);
         HttpEntity<Task> employeeHttpEntityT = new HttpEntity<>(httpHeaders);
         try{
-            ResponseEntity<Employee[]> responseEntity = restTemplate.exchange("http://localhost:8980/ems/employees",
+            ResponseEntity<Employee[]> responseEntity = restTemplate.exchange("http://dockerems:8980/ems/employees",
                     HttpMethod.GET,employeeHttpEntity,Employee[].class);
-            ResponseEntity<Project[]> responseEntityP = restTemplate.exchange("http://localhost:8980/proj/projects",
+            ResponseEntity<Project[]> responseEntityP = restTemplate.exchange("http://dockerems:8980/proj/projects",
                     HttpMethod.GET,employeeHttpEntityP,Project[].class);
 
-            ResponseEntity<Task[]> responseEntityT = restTemplate.exchange("http://localhost:8980/task/tasks/",
+            ResponseEntity<Task[]> responseEntityT = restTemplate.exchange("http://dockerems:8980/task/tasks",
                     HttpMethod.GET,employeeHttpEntityT,Task[].class);
 
             model.addAttribute("employees",responseEntity.getBody());
             model.addAttribute("projects",responseEntityP.getBody());
             model.addAttribute("tasks",responseEntityT.getBody());
             model.addAttribute("opob", new OperationObject());
+            model.addAttribute("username",AccessTokenConfig.getPrincipalName());
+            model.addAttribute("privilage",AccessTokenConfig.getAuthorities());
         }
         catch (HttpStatusCodeException se){
 
@@ -390,7 +450,118 @@ public class UiController extends WebSecurityConfigurerAdapter {
                     .body(se.getResponseBodyAsString());
             model.addAttribute("error",responseEntity);
         }
-        return "menu";
+        return "mainmenu";
 
     }
+
+    @RequestMapping(value = "/employee-tab")
+    public String loadEmployeetab(Model model){
+
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.add("Authorization",AccessTokenConfig.getToken());
+
+        HttpEntity<Employee> employeeHttpEntity = new HttpEntity<>(httpHeaders);
+        HttpEntity<Project> employeeHttpEntityP = new HttpEntity<>(httpHeaders);
+        HttpEntity<Task> employeeHttpEntityT = new HttpEntity<>(httpHeaders);
+        try{
+            ResponseEntity<Employee[]> responseEntity = restTemplate.exchange("http://dockerems:8980/ems/employees",
+                    HttpMethod.GET,employeeHttpEntity,Employee[].class);
+            ResponseEntity<Project[]> responseEntityP = restTemplate.exchange("http://dockerems:8980/proj/projects",
+                    HttpMethod.GET,employeeHttpEntityP,Project[].class);
+
+            ResponseEntity<Task[]> responseEntityT = restTemplate.exchange("http://dockerems:8980/task/tasks/",
+                    HttpMethod.GET,employeeHttpEntityT,Task[].class);
+
+            model.addAttribute("employees",responseEntity.getBody());
+            model.addAttribute("projects",responseEntityP.getBody());
+            model.addAttribute("tasks",responseEntityT.getBody());
+            model.addAttribute("opob", new OperationObject());
+            model.addAttribute("username",AccessTokenConfig.getPrincipalName());
+            model.addAttribute("privilage",AccessTokenConfig.getAuthorities());
+        }
+        catch (HttpStatusCodeException se){
+
+            ResponseEntity responseEntity = ResponseEntity.status(se.getStatusCode())
+                    .headers(se.getResponseHeaders())
+                    .body(se.getResponseBodyAsString());
+            model.addAttribute("error",responseEntity);
+        }
+        return "redirect:/menu";
+
+    }
+
+    @RequestMapping(value = "/project-tab")
+    public String loadProjecttab(Model model){
+
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.add("Authorization",AccessTokenConfig.getToken());
+
+        HttpEntity<Employee> employeeHttpEntity = new HttpEntity<>(httpHeaders);
+        HttpEntity<Project> employeeHttpEntityP = new HttpEntity<>(httpHeaders);
+        HttpEntity<Task> employeeHttpEntityT = new HttpEntity<>(httpHeaders);
+        try{
+            ResponseEntity<Employee[]> responseEntity = restTemplate.exchange("http://dockerems:8980/ems/employees",
+                    HttpMethod.GET,employeeHttpEntity,Employee[].class);
+            ResponseEntity<Project[]> responseEntityP = restTemplate.exchange("http://dockerems:8980/proj/projects",
+                    HttpMethod.GET,employeeHttpEntityP,Project[].class);
+
+            ResponseEntity<Task[]> responseEntityT = restTemplate.exchange("http://dockerems:8980/task/tasks/",
+                    HttpMethod.GET,employeeHttpEntityT,Task[].class);
+
+            model.addAttribute("employees",responseEntity.getBody());
+            model.addAttribute("projects",responseEntityP.getBody());
+            model.addAttribute("tasks",responseEntityT.getBody());
+            model.addAttribute("opob", new OperationObject());
+            model.addAttribute("username",AccessTokenConfig.getPrincipalName());
+            model.addAttribute("privilage",AccessTokenConfig.getAuthorities());
+        }
+        catch (HttpStatusCodeException se){
+
+            ResponseEntity responseEntity = ResponseEntity.status(se.getStatusCode())
+                    .headers(se.getResponseHeaders())
+                    .body(se.getResponseBodyAsString());
+            model.addAttribute("error",responseEntity);
+        }
+        return "redirect:/menu";
+
+    }
+
+    @RequestMapping(value = "/task-tab")
+    public String loadTasktab(Model model){
+
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.add("Authorization",AccessTokenConfig.getToken());
+
+        HttpEntity<Employee> employeeHttpEntity = new HttpEntity<>(httpHeaders);
+        HttpEntity<Project> employeeHttpEntityP = new HttpEntity<>(httpHeaders);
+        HttpEntity<Task> employeeHttpEntityT = new HttpEntity<>(httpHeaders);
+        try{
+            ResponseEntity<Employee[]> responseEntity = restTemplate.exchange("http://dockerems:8980/ems/employees",
+                    HttpMethod.GET,employeeHttpEntity,Employee[].class);
+            ResponseEntity<Project[]> responseEntityP = restTemplate.exchange("http://dockerems:8980/proj/projects",
+                    HttpMethod.GET,employeeHttpEntityP,Project[].class);
+
+            ResponseEntity<Task[]> responseEntityT = restTemplate.exchange("http://dockerems:8980/task/tasks/",
+                    HttpMethod.GET,employeeHttpEntityT,Task[].class);
+
+            model.addAttribute("employees",responseEntity.getBody());
+            model.addAttribute("projects",responseEntityP.getBody());
+            model.addAttribute("tasks",responseEntityT.getBody());
+            model.addAttribute("opob", new OperationObject());
+            model.addAttribute("username",AccessTokenConfig.getPrincipalName());
+            model.addAttribute("privilage",AccessTokenConfig.getAuthorities());
+        }
+        catch (HttpStatusCodeException se){
+
+            ResponseEntity responseEntity = ResponseEntity.status(se.getStatusCode())
+                    .headers(se.getResponseHeaders())
+                    .body(se.getResponseBodyAsString());
+            model.addAttribute("error",responseEntity);
+        }
+        return "redirect:/menu";
+
+    }
+
+
+
 }
