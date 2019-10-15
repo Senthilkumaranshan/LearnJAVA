@@ -321,10 +321,42 @@ public class UiController extends WebSecurityConfigurerAdapter {
     }
 
     @RequestMapping(value = "/operation")
-    public String saveOperation(@ModelAttribute() Operation operation){
+    public String saveOperation(@ModelAttribute OperationObject operationobj){
 
-        System.out.println(operation);
-        return "menu";
+        Operation operation = new Operation();
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.add("Authorization",AccessTokenConfig.getToken());
+
+        for(Integer i=0;i<operationobj.getTid().length;i++){
+
+            operation.setEid(operationobj.getEid());
+            operation.setPid(operationobj.getPid());
+            operation.setTid(operationobj.getTid()[i]);
+
+            HttpEntity<Operation> employeeHttpEntityO = new HttpEntity<>(operation,httpHeaders);
+            restTemplate.postForEntity("http://localhost:8980/op/operations/save",
+                    employeeHttpEntityO,String.class);
+        }
+
+        return "redirect:/employee/"+operationobj.getEid();
+
+    }
+
+    @RequestMapping(value = "/employee")
+    public String saveEmployee(@ModelAttribute Employee employee){
+
+        System.out.println(employee.toString());
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.add("Authorization",AccessTokenConfig.getToken());
+
+
+
+            HttpEntity<Employee> employeeHttpEntityE = new HttpEntity<>(employee,httpHeaders);
+            restTemplate.postForEntity("http://localhost:8980/ems/employee",
+                    employeeHttpEntityE,String.class);
+
+
+        return "redirect:menu";
 
     }
 

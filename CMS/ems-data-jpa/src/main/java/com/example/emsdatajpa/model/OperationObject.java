@@ -1,12 +1,14 @@
 package com.example.emsdatajpa.model;
 
+import java.lang.reflect.Array;
+import java.util.Arrays;
 import java.util.List;
 
 public class OperationObject {
 
     private Integer pid;
     private Integer eid;
-    private List<Integer> tid;
+    private Integer[] tid;
 
     public Integer getPid() {
         return pid;
@@ -24,11 +26,20 @@ public class OperationObject {
         this.eid = eid;
     }
 
-    public List<Integer> getTid() {
+    public Integer[] getTid() {
         return tid;
     }
 
-    public void setTid(List<Integer> tid) {
+    public void setTid(Integer[] tid) {
         this.tid = tid;
+    }
+
+    @Override
+    public String toString() {
+        return "OperationObject{" +
+                "pid=" + pid +
+                ", eid=" + eid +
+                ", tid=" + Arrays.toString(tid) +
+                '}';
     }
 }

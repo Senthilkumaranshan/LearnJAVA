@@ -15,11 +15,17 @@ public class EmployeeController {
     @Autowired
     EmployeeServiceImpl employeeService;
 
-    @RequestMapping(value = "/employees",method = RequestMethod.POST)
-    public Employee save(@RequestBody Employee employee){
+//    @RequestMapping(value = "/employees",method = RequestMethod.POST)
+//    public Employee save(@RequestBody Employee employee){
+//
+//        return employeeService.save(employee);
+//
+//    }
 
-        return employeeService.save(employee);
+    @RequestMapping(value = "/employee",method = RequestMethod.POST)
+    public void save(@RequestBody Employee employee){
 
+        employeeService.save(employee);
     }
 
     @RequestMapping(value = "/employees",method = RequestMethod.GET)

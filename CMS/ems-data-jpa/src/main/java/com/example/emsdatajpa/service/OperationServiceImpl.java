@@ -18,4 +18,9 @@ public class OperationServiceImpl {
 
         return  operationRepository.findOperationsByEmployeeId(id);
     }
+
+    public void save(Operation operation) {
+
+         operationRepository.save(operation);
+    }
 }

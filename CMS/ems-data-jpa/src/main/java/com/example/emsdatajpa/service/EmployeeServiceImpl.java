@@ -15,13 +15,9 @@ public class EmployeeServiceImpl {
     @Autowired
     EmployeeRepository employeeRepository;
 
-    public Employee save(Employee employee) {
+    public void save(Employee employee) {
 
-//        for(Project project:employee.getProjects()){
-//            project.setEmployees((List<Employee>) employee);
-//        }
-
-        return employeeRepository.save(employee);
+        employeeRepository.save(employee);
     }
 
     public List<Employee> getEmployees() {
