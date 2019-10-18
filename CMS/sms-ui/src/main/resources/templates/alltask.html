@@ -19,30 +19,30 @@
                 <a class="nav-link " id="pills-home-tab" th:href="@{/menu}" role="tab" aria-controls="pills-home" aria-selected="true">Home</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" th:id="pills-employee-tab"  th:href="@{/em/employee}" role="tab" aria-controls="pills-profile" aria-selected="false">Employee</a>
-            </li>
-            <li class="nav-item ">
-                <a class="nav-link active" id="pills-project-tab" th:href="@{/pro/projects}" role="tab" aria-controls="pills-contact" aria-selected="false">Project</a>
+                <a class="nav-link " th:id="pills-employee-tab"  th:href="@{/em/employee}" role="tab" aria-controls="pills-profile" aria-selected="false">Employee</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" id="pills-Task-tab" th:href="@{/tsk/tasks}"role="tab" aria-controls="pills-contact" aria-selected="false">Task</a>
+                <a class="nav-link " id="pills-project-tab" th:href="@{/pro/projects}" role="tab" aria-controls="pills-contact" aria-selected="false">Project</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link active" id="pills-Task-tab" th:href="@{/tsk/tasks}"role="tab" aria-controls="pills-contact" aria-selected="false">Task</a>
             </li>
             <li class="nav-item" th:if="${privilage==true}">
-                <a class="nav-link" id="pills-operation-tab" th:href="@{/op/operation}" role="tab" aria-controls="pills-contact" aria-selected="false">Operation</a>
+                <a class="nav-link " id="pills-operation-tab" th:href="@{/op/operation}" role="tab" aria-controls="pills-contact" aria-selected="false">Operation</a>
             </li>
             <li class="nav-item" style="margin-left:47%;margin-top:0.7%;" >
                 <a  style="color:#fff;font-size:22px;" th:text="${username}"></a>&nbsp;<a  href="/logout">SignOut</a>
             </li>
         </ul>
+
         <div class="tab-content" id="pills-tabContent">
-            <div class="tab-pane fade show active" id="pills-project" role="tabpanel" aria-labelledby="pills-project-tab">
+            <div class="tab-pane fade show active" id="pills-Task" role="tabpanel" aria-labelledby="pills-task-tab">
 
                 <div class="container fbbodycolor">
 
                     <div class="jumbotron">
-                        <a href="http://localhost:8080/pro/projects"><img src="/images/back.png" class="back-arrow" alt="back-arrow" th:src="@{/images/back.png}"></a>
-
-                        <h4 align="center">Project Details</h4>
+                        <a th:if="${privilage==true}" data-toggle="modal" data-target="#createtask" class="btn btn-primary right" style="color:#fff">Create Task</a>
+                        <h4 align="center">Task Details</h4>
                     </div>
 
                     <div th:unless="${error==null}">
@@ -63,14 +63,17 @@
                     <div th:if="${error==null}">
                         <table class="table testcolor" align="center">
                             <thead>
-                            <td>Project ID</td>
-                            <td> Project Name</td>
+                            <td>ID</td>
+                            <td>Name</td>
+                            <td>Action</td>
 
                             </thead>
                             <tbody>
-                            <tr th:each="pr: ${project}">
-                                <td><span th:text="${pr.pid}"></span></td>
-                                <td><span th:text="${pr.pname}"></span></td>
+                            <tr th:each="task: ${tasks}">
+                                <td><span th:text="${task.tid}"></span></td>
+                                <td><span th:text="${task.tname}"></span></td>
+                                <td><a href="#" th:href="@{/tasks/{id}(id=${task.tid})}" class="btn btn-info" role="button">view</a></td>
+
                             </tr>
                             </tbody>
                         </table>
@@ -78,6 +81,33 @@
 
 
                 </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- create task Modal -->
+<div class="modal fade" id="createtask" tabindex="-1" role="dialog" aria-labelledby="createtaskLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="createtaskLabel">Create Task</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+                <form th:action="@{/task}" method="post">
+                    <div class="form-group">
+                        <label for="tname">Task Name</label>
+                        <input name="tname"  type="text" class="form-control" id="tname" aria-describedby="tname" placeholder="Enter task">
+                    </div>
+
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
 
             </div>
 

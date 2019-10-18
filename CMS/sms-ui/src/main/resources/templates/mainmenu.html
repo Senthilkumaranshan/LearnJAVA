@@ -26,25 +26,24 @@
     <div th:id="navbarfoot">
         <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
             <li class="nav-item">
-                <a class="nav-link active" id="pills-home-tab" data-toggle="pill" href="#pills-home" role="tab" aria-controls="pills-home" aria-selected="true">Home</a>
+                <a class="nav-link active" id="pills-home-tab" th:href="@{/menu}" role="tab" aria-controls="pills-home" aria-selected="true">Home</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" th:id="pills-employee-tab" data-toggle="pill" href="#pills-employee" role="tab" aria-controls="pills-profile" aria-selected="false">Employee</a>
+                <a class="nav-link" th:id="pills-employee-tab"  th:href="@{/em/employee}" role="tab" aria-controls="pills-profile" aria-selected="false">Employee</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" id="pills-project-tab" data-toggle="pill" href="#pills-project" role="tab" aria-controls="pills-contact" aria-selected="false">Project</a>
+                <a class="nav-link" id="pills-project-tab" th:href="@{/pro/projects}" role="tab" aria-controls="pills-contact" aria-selected="false">Project</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" id="pills-Task-tab" data-toggle="pill" href="#pills-Task" role="tab" aria-controls="pills-contact" aria-selected="false">Task</a>
+                <a class="nav-link" id="pills-Task-tab" th:href="@{/tsk/tasks}"role="tab" aria-controls="pills-contact" aria-selected="false">Task</a>
             </li>
             <li class="nav-item" th:if="${privilage==true}">
-                <a class="nav-link" id="pills-operation-tab" data-toggle="pill" href="#pills-operation" role="tab" aria-controls="pills-contact" aria-selected="false">Operation</a>
+                <a class="nav-link" id="pills-operation-tab" th:href="@{/op/operation}" role="tab" aria-controls="pills-contact" aria-selected="false">Operation</a>
+            </li>
+            <li class="nav-item" style="margin-left:47%;margin-top:0.7%;" >
+                <a  style="color:#fff;font-size:22px;" th:text="${username}"></a>&nbsp;<a  href="/logout">SignOut</a>
             </li>
         </ul>
-        <div class="right-corner">
-            <a class="dropdown-item" href="#" th:text="${username}"></a>
-            <a class="dropdown-item" href="/logout">SignOut</a>
-        </div>
 
         <div class="tab-content" id="pills-tabContent">
             <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">

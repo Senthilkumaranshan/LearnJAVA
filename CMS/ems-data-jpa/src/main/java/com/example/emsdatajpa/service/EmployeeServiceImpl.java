@@ -1,7 +1,6 @@
 package com.example.emsdatajpa.service;
 
 import com.example.emsdatajpa.model.Employee;
-import com.example.emsdatajpa.model.Project;
 import com.example.emsdatajpa.repository.EmployeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,5 +27,9 @@ public class EmployeeServiceImpl {
     public Optional<Employee> getEmployeeById(Integer id) {
 
         return employeeRepository.findById(id);
+    }
+
+    public void deleteEmployeeById(int id) {
+         employeeRepository.deleteById(id);
     }
 }

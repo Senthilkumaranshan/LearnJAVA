@@ -39,5 +39,11 @@ public class EmployeeController {
         return employeeService.getEmployeeById(id);
     }
 
+    @RequestMapping(value = "/employee/{id}",method = RequestMethod.DELETE)
+    public void deleteEmployeeById(@PathVariable int id){
+        System.out.println(id);
+         employeeService.deleteEmployeeById(id);
+    }
+
 
 }
